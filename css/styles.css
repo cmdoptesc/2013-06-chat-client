@@ -38,3 +38,25 @@ body {
     color: green;
     line-height: 13px;
 }
+
+
+
+#chatlog {
+    height: 600px;
+    border: solid #333;
+    border-width: 1px;
+    overflow: hidden;
+}
+
+.message {
+    font-family: helvetica;
+    font-size: 12px;
+}
+
+.username {
+    font-weight: bold;
+}
+
+.timestamp {
+    font-style: italic;
+}

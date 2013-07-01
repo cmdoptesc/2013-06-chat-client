@@ -38,7 +38,7 @@ var retrieveMessages = function() {
 var exportMessages = function(messages) {
   messages = messages.results;
   for (var i = 0; i < messages.length; i++) {
-    $(templater(messages[i])).appendTo("#main");
+    $(templater(messages[i])).appendTo("#chatlog");
   }
 };
 

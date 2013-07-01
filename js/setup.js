@@ -15,40 +15,4 @@ $.ajaxPrefilter(function(settings, _, jqXHR) {
 
 
 
-var message = {
-  text: "console.log('KHANNNN!')"
-};
-
-message = JSON.stringify(message);
-
-
-// $.ajax('https://api.parse.com/1/classes/test', {
-//   contentType: 'application/json',
-//   type: 'POST',
-//   data: message,
-//   success: function(data){
-//     console.log('works');
-//   },
-//   error: function(data) {
-//     console.log('Ajax request failed');
-//   }
-// });
-
-
-$.ajax('https://api.parse.com/1/classes/test', {
-  contentType: 'application/json',
-  success: function(data){
-    $('#main').append(data.results[0].text);
-    console.log(data);
-  },
-  error: function(data) {
-    console.log('Ajax request failed');
-  }
-});
-
-
-
-
-
-
 
