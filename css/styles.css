@@ -42,10 +42,12 @@ body {
 
 
 #chatlog {
+    width: 700px;
     height: 620px;
     border: solid #333;
     border-width: 1px;
     overflow-y: scroll !important;
+    margin-bottom: 10px;
 }
 
 .message {
@@ -53,10 +55,20 @@ body {
     font-size: 12px;
 }
 
-.username {
+.text.friend {
     font-weight: bold;
+}
+
+.username {
+    color: #666;
+    text-decoration: none;
 }
 
 .timestamp {
     font-style: italic;
+}
+
+
+#sendMsg {
+    width: 638px; 
 }
