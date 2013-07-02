@@ -51,38 +51,29 @@ var exportMessages = function(messages) {
   messages = messages.results;
 
   for (var i = messages.length-1; i > -1; i--) {
-    $(templater(messages[i])).appendTo("#chatlog");
+    templater(messages[i]).appendTo("#chatlog");
   }
 
   lastMsgTime = messages[0].createdAt;
-  console.log(messages[0].createdAt);
 
-  //debugger;
 
   $("#chatlog").scrollTop($("#chatlog")[0].scrollHeight);
 };
 
-var sanitizer = function(dirtyGstring){
-  dirtyGstring = '<b>' + dirtyGstring + '</b>';
-  return $(dirtyGstring).text() + ": ";
-};
-
 var templater = function(obj) {
-  var userLine = '';
-  var msgLine = '';
-  var timeLine = '';
+  var messageOutput = $('<div class="message"></div>');
+
   if(obj.hasOwnProperty('username')) {
-    userLine = $('<span class="username"></span>').text(obj.username + ': ').html() + '\n';
+    $('<span class="username"></span>').text(obj.username + ': ').appendTo(messageOutput);
   }
   if(obj.hasOwnProperty('text')) {
-    var cleanString = sanitizer(obj.text);
-    msgLine = $('<span class="text"></span>').text(cleanString).html() + '\n';
+    //var cleanString = sanitizer(obj.text);
+    $("<span class='text'></span>").text(obj.text).appendTo(messageOutput);
   }
   if(obj.hasOwnProperty('createdAt')) {
-    timeLine = $('<span class="timestamp"></span>').text(obj.createdAt).html() + '\n';
+    $('<span class="timestamp"></span>').text(obj.createdAt).appendTo(messageOutput);
   }
 
-  var messageOutput = '<div class="message">\n' + userLine + msgLine + timeLine + '</div>';
   return messageOutput;
 };
 
