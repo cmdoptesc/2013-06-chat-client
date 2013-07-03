@@ -11,13 +11,20 @@
   <body>
 
     <div id="main">
-      <h1>Chatroulette without the pics</h1>
-      <div id="chatlog">
+      <div id="leftBox">
+        <h1 id="roomTitle">roomname</h1>
+        <div id="chatlog">
+        </div>
+      </div>
+      <div id="rightBox">
+        <form action="javascript:changeRoom();">
+          <input type="text" name="changeRoom" id="roomChange" />
+        </form>
       </div>
       <div id="userinput">
         <form action="javascript:sendMessage();">
           <input type="text" name="sendMsg" id="sendMsg" />
-          <button type="submit" class="sendButton">Send</button>
+          <!-- <button type="submit" class="sendButton">Send</button> -->
         </form>
       </div>
     </div>
