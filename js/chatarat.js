@@ -1,29 +1,9 @@
-
-// var message = {
-//   username: "lt;script&gt;function(){alert('PENETRATED');window.location.replace('http://youtu.be/dQw4w9WgXcQ';}();&lt;/script&gt;",
-//   text: '<script>var recursive = function() {  console.log("PWNED");  window.location.replace("http://www.youtube.com/watch?v=dQw4w9WgXcQ");  recursive();  recursive();  recursive();};</script>'
-// };
-
-// message = JSON.stringify(message);
-
-// $.ajax('https://api.parse.com/1/classes/messages', {
-//   contentType: 'application/json',
-//   type: 'POST',
-//   data: message,
-//   success: function(data){
-//     console.log('works');
-//   },
-//   error: function(data) {
-//     console.log('Ajax request failed');
-//   }
-// });
-
 var baseURL = 'https://api.parse.com/1/classes/';
-var _roomname = 'messages';
+var _roomname = 'messages';                               // will be changed as we change rooms
+var lastMsgTime = '2013-07-03T02:42:41.364Z';             // changed as we get new messages
 
 var retrieveMessages = function() {
   var getParam = '?order=-createdAt' + '&limit=50';
-  var lastMsgTime = '2013-07-02T00:17:40.402Z';
 
   var getURL = baseURL + _roomname + getParam + '&where=' + JSON.stringify({createdAt:{'$gt':{'__type':"Date","iso":lastMsgTime}}});
 
@@ -39,17 +19,19 @@ var retrieveMessages = function() {
   });
 };
 
-/// SET INTERVAL -- NEED TO MOVE LATER
-//setInterval(retrieveMessages, 1000);
-
-
 var exportMessages = function(messages) {
   messages = messages.results;
   for (var i = messages.length-1; i > -1; i--) {
     templater(messages[i]).appendTo("#chatlog");
   }
 
-  lastMsgTime = messages[0].createdAt;
+  if(typeof messages[0] === 'undefined') {
+    console.log("No existing messages in chatroom " + _roomname + ".");
+  } else {
+    lastMsgTime = messages[0].createdAt;
+  }
+
+  // scrolls to the bottom
   $("#chatlog").scrollTop($("#chatlog")[0].scrollHeight);
 };
 
@@ -92,6 +74,7 @@ var sendMessage = function() {
       }
     });
   }
+
   $("#sendMsg").val("");
   retrieveMessages();
 };
@@ -103,7 +86,8 @@ var updateTitle = function() {
 };
 
 var changeRoom = function() {
-  _roomname = $("#roomChange").val();
+  _roomname = $("#roomChange").val().replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
+
   updateTitle();
   $('<div class="announcement">Now entering ' + _roomname + '</div>').appendTo('#chatlog');
 
@@ -119,3 +103,5 @@ $('#chatlog').on('click', 'a', function(){
   var username = this.classList[1];
   $('#chatlog').find('.'+username).next().toggleClass("friend");
 });
+
+setInterval(retrieveMessages, 5000);
