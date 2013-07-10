@@ -1,34 +1,32 @@
-var baseURL = 'https://api.parse.com/1/classes/';
+var baseURL = 'http://127.0.0.1:8080/classes/';
 var _roomname = 'messages';                               // will be changed as we change rooms
-var lastMsgTime = '2013-07-03T02:42:41.364Z';             // changed as we get new messages
+var lastMsgTime = '2013-07-10T02:35:04.472Z';             // changed as we get new messages
 
 var retrieveMessages = function() {
-  var getParam = '?order=-createdAt' + '&limit=50';
-
-  var getURL = baseURL + _roomname + getParam + '&where=' + JSON.stringify({createdAt:{'$gt':{'__type':"Date","iso":lastMsgTime}}});
+  var getURL = baseURL + _roomname + '/?time=' + JSON.stringify(lastMsgTime);
 
   $.ajax(getURL, {
     contentType: 'application/json',
     success: function(data){
-      console.log('Retrieved messages from server.');
       exportMessages(data);
+      console.log('Retrieved messages from server.');
     },
     error: function(data) {
-      console.log('Ajax request failed');
+      console.log('Ajax GET request failed');
     }
   });
 };
 
 var exportMessages = function(messages) {
-  messages = messages.results;
-  for (var i = messages.length-1; i > -1; i--) {
+  //messages = messages.results;      // used because Parse would return a Object with a results array
+  for (var i = 0; i < messages.length; i++) {
     templater(messages[i]).appendTo("#chatlog");
   }
 
   if(typeof messages[0] === 'undefined') {
     console.log("No existing messages in chatroom " + _roomname + ".");
   } else {
-    lastMsgTime = messages[0].createdAt;
+    lastMsgTime = messages[messages.length-1].createdAt;
   }
 
   // scrolls to the bottom
@@ -36,13 +34,13 @@ var exportMessages = function(messages) {
 };
 
 var templater = function(obj) {
+
   var messageOutput = $('<div class="message"></div>');
 
   if(obj.hasOwnProperty('username')) {
     $('<a href="#" class="username '+obj.username+'"></a>').text(obj.username + ': ').appendTo(messageOutput);
   }
   if(obj.hasOwnProperty('text')) {
-    //var cleanString = sanitizer(obj.text);
     var shortened = obj.text.substr(0,160);
     $("<span class='text'></span>").text(shortened + ' ').appendTo(messageOutput);
   }
@@ -59,23 +57,23 @@ var sendMessage = function() {
   message.text = $("#sendMsg").val();
   message = JSON.stringify(message);
 
-  var postURL = baseURL + _roomname;
+  var postURL = baseURL + _roomname + '/';
 
   if($("#sendMsg").val() !== '') {
     $.ajax(postURL, {
-      contentType: 'application/json',
+      'content-type': 'application/json',
       type: 'POST',
       data: message,
       success: function(data){
-        console.log('Message submitted to room ' + _roomname);
+        console.log('Message submitted to server.');
       },
       error: function(data) {
-        console.log('Ajax request failed');
+        console.log('Ajax POST request failed');
       }
     });
   }
 
-  $("#sendMsg").val("");
+  $("#sendMsg").val('');
   retrieveMessages();
 };
 
@@ -104,4 +102,4 @@ $('#chatlog').on('click', 'a', function(){
   $('#chatlog').find('.'+username).next().toggleClass("friend");
 });
 
-setInterval(retrieveMessages, 5000);
+//setInterval(retrieveMessages, 5000);
